@@ -25,3 +25,8 @@ symfony console doctrine:fixtures:load
 
 #Import Faker
 symfony composer req fakerphp/faker
+
+
+__________________________________________
+Relation Sortie-Site redondante avec la relation
+Sortie-Participant-Site

@@ -26,8 +26,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setEmail('admin@sortir-eni.fr');
-        $admin->setFirstName();
-        $admin->setLastName();
+        $admin->setFirstName($faker->firstName);
+        $admin->setLastName($faker->lastName);
         $admin->setPhone(str_replace(' ','',$faker->phoneNumber()));
         $pwd=$this->userPasswordHasher->hashPassword($admin,'123456');
         $admin->setPassword($pwd);
