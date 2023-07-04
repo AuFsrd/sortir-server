@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VenueRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VenueRepository::class)]
 class Venue
