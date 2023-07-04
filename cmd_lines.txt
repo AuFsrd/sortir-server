@@ -1,0 +1,10 @@
+#Create database
+symfony console doctrine:database:create
+
+#Entities:
+Participant -> User
+Site -> Site
+Sortie -> Event
+Lieu -> Venue
+Etat -> State
+Ville -> City
