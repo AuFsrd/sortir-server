@@ -22,3 +22,6 @@ symfony doctrine:migrations:migrate
 symfony composer req orm-fixtures
 #Execute fixtures
 symfony console doctrine:fixtures:load
+
+#Import Faker
+symfony composer req fakerphp/faker

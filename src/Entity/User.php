@@ -56,6 +56,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank()]
     private ?bool $active = null;
 
+    /**
+     * @param int|null $id
+     */
+    public function __construct()
+    {
+        $this->administrator = false;
+        $this->active = true;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;
