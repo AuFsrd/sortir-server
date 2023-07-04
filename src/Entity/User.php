@@ -38,9 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank()]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(length: 15, nullable: true)]
     #[Assert\NotBlank()]
-    #[Assert\Length(10)]
+    #[Assert\Length(min:10,max:15)]
     private ?string $phone = null;
 
     #[ORM\Column(length: 100, unique: true)]
@@ -55,6 +55,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options:['default'=>true])]
     #[Assert\NotBlank()]
     private ?bool $active = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $site = null;
 
     /**
      * @param int|null $id
@@ -204,6 +208,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(bool $active): static
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): static
+    {
+        $this->site = $site;
 
         return $this;
     }
