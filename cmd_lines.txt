@@ -2,9 +2,14 @@
 symfony console doctrine:database:create
 
 #Entities:
-Participant -> User
+(except user)
 Site -> Site
 Sortie -> Event
 Lieu -> Venue
 Etat -> State
 Ville -> City
+symfony console make:entity [entityName]
+
+#Create authentication system
+symfony console make:user
+Participant -> User

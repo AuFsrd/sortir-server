@@ -17,9 +17,12 @@ class City
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank()]
+    #[Assert\Length(min:2, max:100, minMessage: 'Too short')]
     private ?string $name = null;
 
     #[ORM\Column(length: 5)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(5)]
     private ?string $postcode = null;
 
     public function getId(): ?int

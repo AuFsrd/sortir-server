@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -15,17 +16,23 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:2, max:255, minMessage: 'Too short')]
     private ?string $name = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $startDateTime = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank()]
+    #[Assert\GreaterThan(0)]
     private ?int $duration = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $registrationDeadline = null;
 
+    #[Assert\NotBlank()]
+    #[Assert\GreaterThan(0)]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $maxParticipants = null;
 

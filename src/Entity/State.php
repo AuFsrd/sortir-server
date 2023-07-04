@@ -14,6 +14,8 @@ class State
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:2, max:30, minMessage: 'Too short')]
     private ?string $name = null;
 
     public function getId(): ?int

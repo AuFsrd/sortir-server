@@ -14,9 +14,13 @@ class Venue
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:2, max:255, minMessage: 'Too short')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:2, max:255, minMessage: 'Too short')]
     private ?string $street = null;
 
     #[ORM\Column(nullable: true)]
