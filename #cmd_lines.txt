@@ -1,0 +1,32 @@
+#Create database
+symfony console doctrine:database:create
+
+#Entities:
+(except user)
+Site -> Site
+Sortie -> Event
+Lieu -> Venue
+Etat -> State
+Ville -> City
+symfony console make:entity [entityName]
+
+#Create authentication system
+symfony console make:user
+Participant -> User
+
+#Migration
+symfony console make:migration
+symfony doctrine:migrations:migrate
+
+#Import fixtures
+symfony composer req orm-fixtures
+#Execute fixtures
+symfony console doctrine:fixtures:load
+
+#Import Faker
+symfony composer req fakerphp/faker
+
+
+__________________________________________
+Relation Sortie-Site redondante avec la relation
+Sortie-Participant-Site
