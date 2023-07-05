@@ -11,6 +11,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: StateRepository::class)]
 class State
 {
+    final const STATES = [
+        'CREATED',
+        'OPEN',
+        'CLOSED',
+        'IN PROGRESS',
+        'PAST',
+        'CANCELLED',
+        'ARCHIVED',
+        ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
