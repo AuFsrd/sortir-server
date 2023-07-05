@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Get(normalizationContext: ['groups' => 'user:read']),
-        new GetCollection(normalizationContext: ['groups' => 'user:read'])
+        new GetCollection(normalizationContext: ['groups' => 'user:read']),
+        new Patch(normalizationContext: ['groups' => 'user:write'])
     ],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -26,13 +29,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read','user:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:180, minMessage: 'Too short')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read','user:write'])]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -47,24 +50,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank()]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read','user:write'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank()]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read','user:write'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 15, nullable: true)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:10,max:15)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','user:write'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 100, unique: true)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:100, minMessage: 'Too short')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','user:write'])]
     private ?string $email = null;
 
     #[ORM\Column(options:['default'=>false])]
