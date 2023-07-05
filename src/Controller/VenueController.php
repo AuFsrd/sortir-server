@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\VenueRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,10 +11,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class VenueController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(): Response
+    public function list(VenueRepository $venueRepository): Response
     {
+        $venues = $venueRepository->findAll();
         return $this->render('venue/list.html.twig', [
-            'controller_name' => 'VenueController',
+            'venues' => $venues,
         ]);
     }
 }

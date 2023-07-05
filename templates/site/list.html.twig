@@ -5,5 +5,30 @@
 {% block body %}
     <h1>Sites</h1>
     {#  TODO display stats  #}
+
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+
+        </tr>
+        </thead>
+        {% for site in sites %}
+
+            <tr>
+                <td>{{ site.name }}</td>
+                <td>
+                    <button>Edit</button>
+                    <button>Remove</button>
+                </td>
+            </tr>
+
+        {% endfor %}
+        <tbody>
+
+
+        </tbody>
+    </table>
+
 {% endblock %}
 
