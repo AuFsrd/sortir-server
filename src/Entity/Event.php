@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,53 +15,71 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'event:read']),
+        new GetCollection(normalizationContext: ['groups' => 'event:read']),
+        new Post(normalizationContext: ['groups' => 'event:write']),
+        new Patch(normalizationContext: ['groups' => 'event:write'])
+    ],
+)]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'event:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:255, minMessage: 'Too short')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'event:read', 'event:write'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['event:read', 'event:write'])]
     private ?\DateTimeImmutable $startDateTime = null;
 
     #[ORM\Column]
     #[Assert\NotBlank()]
     #[Assert\GreaterThan(0)]
+    #[Groups(['event:read', 'event:write'])]
     private ?int $duration = null;
 
     #[ORM\Column]
+    #[Groups(['event:read', 'event:write'])]
     private ?\DateTimeImmutable $registrationDeadline = null;
 
     #[Assert\NotBlank()]
     #[Assert\GreaterThan(0)]
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['event:read', 'event:write'])]
     private ?int $maxParticipants = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['event:read', 'event:write'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])] // Pour la publication
     private ?State $state = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
     private ?Venue $venue = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventsAsOrganiser')]
-    #[ORM\JoinColumn(nullable: true)]
+
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
     private ?User $organiser = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'eventsAsParticipant')]
+    #[Groups(['event:read'])]
     private Collection $participants;
 
     public function __construct()
