@@ -92,6 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private Collection $eventsAsParticipant;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $filename = null;
+
     /**
      * @param int|null $id
      */
@@ -339,5 +342,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function fullname(): string {
         return strtoupper($this->getLastName()) . ' '.ucfirst(strtolower($this->getFirstName()));
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(?string $filename): static
+    {
+        $this->filename = $filename;
+
+        return $this;
     }
 }
