@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\EventRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,9 +83,17 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete(Request $request, User $user,
+                           UserRepository $userRepository,
+                           EventRepository $eventRepository): Response
     {
+
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $nullUser = $userRepository->findOneBy(['username'=>'Archived user']);
+            foreach ($user->getEventsAsOrganiser() as $e) {
+                $e->setOrganiser($nullUser);
+            }
+
             $userRepository->remove($user, true);
         }
 

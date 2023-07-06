@@ -23,6 +23,19 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $sites = $manager->getRepository(Site::class)->findAll();
 
+        $nullUser = new User();
+        $nullUser->setUsername('Archived user');
+        $nullUser->setEmail('null@sortir-eni.fr');
+        $nullUser->setFirstName('NA');
+        $nullUser->setLastName('NA');
+        $nullUser->setPhone(str_replace(' ','',$faker->phoneNumber()));
+        $pwd=$this->userPasswordHasher->hashPassword($nullUser,'123456');
+        $nullUser->setPassword($pwd);
+        $nullUser->setRoles(['ROLE_USER']);
+        $nullUser->setSite($faker->randomElement($sites));
+        $nullUser->setAdministrator(false);
+        $manager->persist($nullUser);
+
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setEmail('admin@sortir-eni.fr');

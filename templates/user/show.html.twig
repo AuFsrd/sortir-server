@@ -52,6 +52,7 @@
     <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Start date</th>
                 <th>Name</th>
                 <th>City</th>
@@ -62,7 +63,7 @@
         {% for e in user.eventsAsOrganiser %}
 
             <tr>
-
+            <td>{{ e.id }}</td>
             <td>{{ e.startDateTime|date("Y-m-d") }}</td>
             <td>{{ e.name }}</td>
             <td>{{ e.venue.city.name }}</td>
@@ -80,6 +81,7 @@
     <table>
         <thead>
         <tr>
+            <th>ID</th>
             <th>Start date</th>
             <th>Name</th>
             <th>City</th>
@@ -90,6 +92,7 @@
         <tbody>
         {% for e in user.eventsAsParticipant %}
             <tr>
+                <td>{{ e.id }}</td>
                 <td>{{ e.startDateTime|date("Y-m-d") }}</td>
                 <td>{{ e.name }}</td>
                 <td>{{ e.venue.city.name }}</td>

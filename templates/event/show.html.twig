@@ -16,6 +16,10 @@
             <td>{{ event.organiser.site.name }}</td>
         </tr>
         <tr>
+            <th>Organised by</th>
+            <td>{{ event.organiser.id ~ '//'~ event.organiser.fullname }}</td>
+        </tr>
+        <tr>
             <th>Name</th>
             <td>{{ event.name }}</td>
         </tr>
@@ -72,6 +76,7 @@
     <table>
         <thead>
         <tr>
+            <th>ID</th>
             <th>Username</th>
             <th>Name</th>
         </tr>
@@ -80,6 +85,7 @@
         <tbody>
         {% for p in event.participants %}
             <tr>
+                <td>{{ p.id }}</td>
                 <td>{{ p.username }}</td>
                 <td>{{ p.fullname }}</td>
                 <td>
