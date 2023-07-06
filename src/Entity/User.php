@@ -68,12 +68,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(options:['default'=>false])]
-    #[Assert\NotBlank()]
     #[Groups(['user:read'])]
     private ?bool $administrator = null;
 
     #[ORM\Column(options:['default'=>true])]
-    #[Assert\NotBlank()]
     #[Groups(['user:read'])]
     private ?bool $active = null;
 
@@ -261,9 +259,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getEventsAsOrganiser(): Collection
     {
+
+        //todo fix sort events list by date
+//        usort($this->eventsAsOrganiser, function($e1,$e2){
+//            return $this->cmpDate($e1->getStartDateTime(), $e2->getStartDateTime());
+//        });
+
         return $this->eventsAsOrganiser;
     }
-
+    private function cmpDate($d1, $d2) {
+        if ($d1===$d2) {
+            return 0;
+        } elseif($d1<$d2) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
     public function addEventAsOrganiser(Event $event): static
     {
         if (!$this->eventsAsOrganiser->contains($event)) {
@@ -289,7 +301,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Event>
      */
-    public function getEventAsParticipant(): Collection
+    public function getEventsAsParticipant(): Collection
     {
         return $this->eventsAsParticipant;
     }
