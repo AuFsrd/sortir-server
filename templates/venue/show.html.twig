@@ -30,9 +30,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_venue_index') }}">back to list</a>
+    <a href="{{ path('app_venue_index') }}">Venue list</a>
 
-    <a href="{{ path('app_venue_edit', {'id': venue.id}) }}">edit</a>
+    <a href="{{ path('app_venue_edit', {'id': venue.id}) }}">Edit</a>
 
     {{ include('venue/_delete_form.html.twig') }}
 {% endblock %}

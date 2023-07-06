@@ -98,9 +98,9 @@
 
     </table>
 
-    <a href="{{ path('app_event_index') }}">back to list</a>
+    <a href="{{ path('app_event_index') }}">Event list</a>
 
-    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+    <a href="{{ path('app_event_edit', {'id': event.id}) }}">Edit</a>
 
     {{ include('event/_delete_form.html.twig') }}
 {% endblock %}
