@@ -95,6 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->administrator = false;
         $this->active = true;
+        $this->roles[] = 'ROLE_USER';
         $this->eventsAsOrganiser = new ArrayCollection();
         $this->eventsAsParticipant = new ArrayCollection();
     }
@@ -132,17 +133,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+//        $roles = $this->roles;
+//        // guarantee every user at least has ROLE_USER
+//        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+//        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
+        return $this;
+    }
+
+    public function addRole(string $role): static {
+        $this->roles[]=$role;
+        $this->roles = array_unique($this->roles);
         return $this;
     }
 
