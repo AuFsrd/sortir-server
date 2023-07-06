@@ -73,6 +73,7 @@ class Event
     private ?Venue $venue = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventsAsOrganiser')]
+
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['event:read', 'event:write'])]
     private ?User $organiser = null;
@@ -230,4 +231,12 @@ class Event
 
         return $this;
     }
+
+    public function removeParticipants(): static
+    {
+
+
+        return $this;
+    }
+
 }
