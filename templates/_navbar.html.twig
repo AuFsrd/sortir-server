@@ -1,36 +1,39 @@
 <nav>
     <div>
         <div>
-            {#            Logo + lien vers site Front#}
+            {#            Logo + lien vers site Front #}
         </div>
         <ul>
 
             {% if app.user %}
-            <li>
-                <a href="{{ path('main_home') }}">Home</a>
-            </li>
-            <li>
-                <a href="{{ path('user_list') }}">Users</a>
-            </li>
-            <li>
-                <a href="{{ path('event_list') }}">Events</a>
-            </li>
-            <li>
-                <a href="{{ path('venue_list') }}">Venues</a>
-            </li>
-            <li>
-                <a href="{{ path('city_list') }}">Cities</a>
-            </li>
-            <li>
-                <a href="{{ path('site_list') }}">Sites</a>
-            </li>
-            <li>
-                <a href="{{ path('app_logout') }}">Logout</a>
-            </li>
+                <li>
+                    <a href="{{ path('main_home') }}">Home</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_user_index') }}">Users</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_event_index') }}">Events</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_venue_index') }}">Venues</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_city_index') }}">Cities</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_site_index') }}">Sites</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_state_index') }}">Event states</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_logout') }}">Logout</a>
+                </li>
 
             {% else %}
                 <li>
-                <a href="{{ path('app_login') }}">Login</a>
+                    <a href="{{ path('app_login') }}">Login</a>
                 </li>
             {% endif %}
         </ul>
