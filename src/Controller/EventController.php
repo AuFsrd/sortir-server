@@ -57,8 +57,11 @@ class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // règle gestion maxInscrits => modif state si besoin
+            // règle gestion maxInscrits => modif status si besoin
             $participants = $form->get('participants')->getData();
+            if ($participants->count() == $event->getMaxParticipants()) {
+                $event->setStatus();
+            }
             if ($participants->count() > $event->getMaxParticipants()) {
 //                dump("too many participants");
                 $this->addFlash('danger', "The maximum number of participants (" . $event->getMaxParticipants() . ") has been exceeded.");
@@ -67,10 +70,6 @@ class EventController extends AbstractController
                     'event' => $event
                     ]);
             }
-//            dd($participants);
-//            dd($participants->getValues());
-            dd($participants->count());
-//            dd($participants->getCollection()->getElements());
 
             $eventRepository->save($event, true);
 

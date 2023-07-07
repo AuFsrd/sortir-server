@@ -4,18 +4,18 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\State;
+use App\Entity\Status;
 
-class StateFixtures extends Fixture
+class StatusFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
         // $manager->persist($product);
-        foreach (State::STATES as $s) {
-            $state = new State();
-            $state->setName($s);
-            $manager->persist($state);
+        foreach (Status::STATES as $s) {
+            $status = new Status();
+            $status->setName($s);
+            $manager->persist($status);
         }
 
         $manager->flush();
