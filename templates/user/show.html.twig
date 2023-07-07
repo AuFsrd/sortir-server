@@ -47,7 +47,11 @@
 
         </tbody>
     </table>
-
+    <div>
+        {% if user.filename %}
+            <img src="{{ asset(app_images_user_directory ~'/'~ user.filename) }}" class="" alt="image">
+        {% endif %}
+    </div>
     <h3>Organising these events:</h3>
     <table>
         <thead>

@@ -12,11 +12,15 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -69,9 +73,34 @@ class UserType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => '--Choose a site--'
             ])
+            ->add('image', FileType::class, [
+                'required'=>false,
+                'mapped'=>false,
+                'constraints'=> [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png'
+                        ],
+                        'mimeTypesMessage'=>'Please upload a valid image'
+                    ])
+                ]
+            ])
 //            ->add('eventsAsParticipant')
 //            ->add('eventsAsParticipant')
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
+            $user=$event->getData();
+            if($user && $user->getFileName()) {
+                $form=$event->getForm();
+
+                $form->add('deleteImage', CheckboxType::class, [
+                    'required'=>false,
+                    'mapped'=>false
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -29,6 +29,8 @@ symfony composer req fakerphp/faker
 #Make CRUD for all entities
 php bin/console make:crud ENTITYNAME
 
+#Import csv decoder
+composer require league/csv
 __________________________________________
 Relation Sortie-Site redondante avec la relation
 Sortie-Participant-Site
