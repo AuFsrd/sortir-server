@@ -40,6 +40,7 @@ class Event
 
     #[ORM\Column]
     #[Groups(['event:read', 'event:write'])]
+    #[Assert\GreaterThan('today UTC')]
     private ?\DateTimeImmutable $startDateTime = null;
 
     #[ORM\Column]
@@ -50,10 +51,11 @@ class Event
 
     #[ORM\Column]
     #[Groups(['event:read', 'event:write'])]
+    #[Assert\GreaterThan('today UTC')]
     private ?\DateTimeImmutable $registrationDeadline = null;
 
     #[Assert\NotBlank()]
-    #[Assert\GreaterThan(0)]
+    #[Assert\GreaterThan(1)]
     #[ORM\Column(type: Types::SMALLINT)]
     #[Groups(['event:read', 'event:write'])]
     private ?int $maxParticipants = null;
