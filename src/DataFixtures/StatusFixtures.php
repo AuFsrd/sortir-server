@@ -12,7 +12,7 @@ class StatusFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
-        foreach (Status::STATES as $s) {
+        foreach (Status::STATUS as $s) {
             $status = new Status();
             $status->setName($s);
             $manager->persist($status);

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Entity\State;
+use App\Entity\Status;
 use App\Form\EventType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,9 +34,9 @@ class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $event->setState($em->getRepository(State::class)->findOneBy(['name' => 'CREATED']));
+            $event->setStatus($em->getRepository(Status::class)->findOneBy(['name' => 'CREATED']));
 
-            // règle gestion maxInscrits => modif state si besoin
+            // règle gestion maxInscrits => modif status si besoin
             $participants = $form->get('participants')->getData();
             $flashCount = 0;
             if ($participants->count() > $event->getMaxParticipants()) {
@@ -47,7 +47,7 @@ class EventController extends AbstractController
                     . " (" . $participants->count() . ").");
 
             } elseif ($participants->count() == $event->getMaxParticipants()) {
-                $event->setState($em->getRepository(State::class)->findOneBy(['name' => 'CLOSED']));
+                $event->setStatus($em->getRepository(Status::class)->findOneBy(['name' => 'CLOSED']));
             }
 
             // Registrationdeadline and starting date check
@@ -97,7 +97,7 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // règle gestion maxInscrits => modif state si besoin
+            // règle gestion maxInscrits => modif status si besoin
             $participants = $form->get('participants')->getData();
             $flashCount = 0;
 
@@ -109,7 +109,7 @@ class EventController extends AbstractController
                     . " (" . $participants->count() . ").");
 
             } elseif ($participants->count() == $event->getMaxParticipants()) {
-                $event->setState($em->getRepository(State::class)->findOneBy(['name' => 'CLOSED']));
+                $event->setStatus($em->getRepository(Status::class)->findOneBy(['name' => 'CLOSED']));
             }
 
             // Registrationdeadline and starting date check
