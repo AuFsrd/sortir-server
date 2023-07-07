@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use App\Repository\StateRepository;
+use App\Repository\StatusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,8 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     security: "is_granted('ROLE_ADMIN')"
 )]
-#[ORM\Entity(repositoryClass: StateRepository::class)]
-class State
+#[ORM\Entity(repositoryClass: StatusRepository::class)]
+class Status
 {
     final const STATES = [
         'CREATED',
@@ -42,7 +42,7 @@ class State
     #[Groups(['event:read', 'event:write'])]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'state', targetEntity: Event::class)]
+    #[ORM\OneToMany(mappedBy: 'status', targetEntity: Event::class)]
     private Collection $events;
 
     public function __construct()
@@ -79,7 +79,7 @@ class State
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->setState($this);
+            $event->setStatus($this);
         }
 
         return $this;
@@ -89,8 +89,8 @@ class State
     {
         if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
-            if ($event->getState() === $this) {
-                $event->setState(null);
+            if ($event->getStatus() === $this) {
+                $event->setStatus(null);
             }
         }
 

@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Event;
-use App\Entity\State;
+use App\Entity\Status;
 use App\Entity\User;
 use App\Entity\Venue;
 use Doctrine\ORM\EntityRepository;
@@ -23,11 +23,11 @@ class EventType extends AbstractType
             ->add('registrationDeadline')
             ->add('maxParticipants')
             ->add('description')
-            ->add('state', EntityType::class, [
-                'label' => 'State',
-                'class' => State::class,
+            ->add('status', EntityType::class, [
+                'label' => 'Status',
+                'class' => Status::class,
                 'choice_label' => 'name',
-                'placeholder' => '--Choose a state--'
+                'placeholder' => '--Choose a status--'
             ])
             ->add('venue', EntityType::class, [
                 'label' => 'Venue',

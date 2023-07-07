@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\State;
+use App\Entity\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<State>
+ * @extends ServiceEntityRepository<Status>
  *
- * @method State|null find($id, $lockMode = null, $lockVersion = null)
- * @method State|null findOneBy(array $criteria, array $orderBy = null)
- * @method State[]    findAll()
- * @method State[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Status|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Status|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Status[]    findAll()
+ * @method Status[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class StateRepository extends ServiceEntityRepository
+class StatusRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, State::class);
+        parent::__construct($registry, Status::class);
     }
 
-    public function save(State $entity, bool $flush = false): void
+    public function save(Status $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class StateRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(State $entity, bool $flush = false): void
+    public function remove(Status $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class StateRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return State[] Returns an array of State objects
+//     * @return Status[] Returns an array of Status objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class StateRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?State
+//    public function findOneBySomeField($value): ?Status
 //    {
 //        return $this->createQueryBuilder('s')
 //            ->andWhere('s.exampleField = :val')

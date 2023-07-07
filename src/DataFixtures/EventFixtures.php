@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Event;
 use App\Entity\Site;
-use App\Entity\State;
+use App\Entity\Status;
 use App\Entity\User;
 use App\Entity\Venue;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -21,7 +21,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        $states = $manager->getRepository(State::class)->findAll();
+        $statuses = $manager->getRepository(Status::class)->findAll();
         $venues = $manager->getRepository(Venue::class)->findAll();
         $users = $manager->getRepository(User::class)->findAll();
 
@@ -36,7 +36,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             $event->setRegistrationDeadline($tempDate->sub(new \DateInterval('P1D')));
             $event->setMaxParticipants(mt_rand(2,10));
             $event->setDescription($faker->realText(150));
-            $event->setState($faker->randomElement($states));
+            $event->setStatus($faker->randomElement($statuses));
             $event->setVenue($faker->randomElement($venues));
 //            $organiser = $faker->randomElement($users);
             shuffle($users);
