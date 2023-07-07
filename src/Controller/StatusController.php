@@ -14,65 +14,65 @@ use Symfony\Component\Routing\Annotation\Route;
 class StatusController extends AbstractController
 {
     #[Route('/', name: 'app_status_index', methods: ['GET'])]
-    public function index(StatusRepository $stateRepository): Response
+    public function index(StatusRepository $statusRepository): Response
     {
         return $this->render('status/index.html.twig', [
-            'statuses' => $stateRepository->findAll(),
+            'statuses' => $statusRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_state_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, StatusRepository $stateRepository): Response
+    #[Route('/new', name: 'app_status_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, StatusRepository $statusRepository): Response
     {
-        $state = new Status();
-        $form = $this->createForm(StatusType::class, $state);
+        $status = new Status();
+        $form = $this->createForm(StatusType::class, $status);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $stateRepository->save($state, true);
+            $statusRepository->save($status, true);
 
-            return $this->redirectToRoute('app_state_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_status_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('status/new.html.twig', [
-            'status' => $state,
+            'status' => $status,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_state_show', methods: ['GET'])]
-    public function show(Status $state): Response
+    #[Route('/{id}', name: 'app_status_show', methods: ['GET'])]
+    public function show(Status $status): Response
     {
         return $this->render('status/show.html.twig', [
-            'status' => $state,
+            'status' => $status,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_state_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Status $state, StatusRepository $stateRepository): Response
+    #[Route('/{id}/edit', name: 'app_status_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Status $status, StatusRepository $statusRepository): Response
     {
-        $form = $this->createForm(StatusType::class, $state);
+        $form = $this->createForm(StatusType::class, $status);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $stateRepository->save($state, true);
+            $statusRepository->save($status, true);
 
-            return $this->redirectToRoute('app_state_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_status_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('status/edit.html.twig', [
-            'status' => $state,
+            'status' => $status,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_state_delete', methods: ['POST'])]
-    public function delete(Request $request, Status $state, StatusRepository $stateRepository): Response
+    #[Route('/{id}', name: 'app_status_delete', methods: ['POST'])]
+    public function delete(Request $request, Status $status, StatusRepository $statusRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$state->getId(), $request->request->get('_token'))) {
-            $stateRepository->remove($state, true);
+        if ($this->isCsrfTokenValid('delete'.$status->getId(), $request->request->get('_token'))) {
+            $statusRepository->remove($status, true);
         }
 
-        return $this->redirectToRoute('app_state_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_status_index', [], Response::HTTP_SEE_OTHER);
     }
 }

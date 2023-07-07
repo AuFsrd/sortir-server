@@ -28,7 +28,7 @@
                 <td>{{ event.duration }}</td>
                 <td>{{ event.registrationDeadline ? event.registrationDeadline|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ event.participants | length }} / {{ event.maxParticipants }}</td>
-                <td>{{ event.status }}</td>
+                <td>{{ event.status.name }}</td>
                 <td>{{ event.description }}</td>
                 <td>
                     <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
