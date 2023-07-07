@@ -72,7 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(options:['default'=>false])]
-    #[Assert\NotBlank()]
     #[Groups(['user:read'])]
     private ?bool $administrator = null;
 
@@ -293,7 +292,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Event>
      */
-    public function getEventAsParticipant(): Collection
+    public function getEventsAsParticipant(): Collection
     {
         return $this->eventsAsParticipant;
     }
