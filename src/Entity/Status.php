@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: StatusRepository::class)]
 class Status
 {
-    final const STATES = [
+    final const STATUS = [
         'CREATED',
         'OPEN',
         'CLOSED',
