@@ -57,9 +57,25 @@ class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // règle gestion maxInscrits => modif state si besoin
+            $participants = $form->get('participants')->getData();
+            if ($participants->count() > $event->getMaxParticipants()) {
+//                dump("too many participants");
+                $this->addFlash('danger', "The maximum number of participants (" . $event->getMaxParticipants() . ") has been exceeded.");
+                return $this->render('event/edit.html.twig', [
+                    'form' => $form,
+                    'event' => $event
+                    ]);
+            }
+//            dd($participants);
+//            dd($participants->getValues());
+            dd($participants->count());
+//            dd($participants->getCollection()->getElements());
+
             $eventRepository->save($event, true);
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+//            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute("app_event_show", ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('event/edit.html.twig', [
