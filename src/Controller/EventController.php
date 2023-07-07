@@ -25,8 +25,8 @@ class EventController extends AbstractController
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,
-            EntityManagerInterface $em
+    public function new(Request                $request,
+                        EntityManagerInterface $em
     ): Response
     {
         $event = new Event();
@@ -34,7 +34,7 @@ class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $event->setState($em->getRepository(State::class)->findOneBy(['name'=>'CREATED']));
+            $event->setState($em->getRepository(State::class)->findOneBy(['name' => 'CREATED']));
 
             // règle gestion maxInscrits => modif state si besoin
             $participants = $form->get('participants')->getData();
@@ -44,22 +44,22 @@ class EventController extends AbstractController
                 $flashCount++;
                 $this->addFlash('danger', "The maximum number of participants ("
                     . $event->getMaxParticipants() . ") has been exceeded"
-                    ." (".$participants->count().").");
+                    . " (" . $participants->count() . ").");
 
             } elseif ($participants->count() == $event->getMaxParticipants()) {
-                $event->setState($em->getRepository(State::class)->findOneBy(['name'=>'CLOSED']));
+                $event->setState($em->getRepository(State::class)->findOneBy(['name' => 'CLOSED']));
             }
 
             // Registrationdeadline and starting date check
-            if ($form->get('registrationDeadline')->getData()>$form->get('startDateTime')->getData()) {
+            if ($form->get('registrationDeadline')->getData() > $form->get('startDateTime')->getData()) {
                 $flashCount++;
                 $this->addFlash('danger', "Registration deadline ("
                     . $form->get('registrationDeadline')->getData()->format('Y-m-d H:m') . ") can't exceed starting date"
-                    ." (".$form->get('startDateTime')->getData()->format('Y-m-d H:m').").");
+                    . " (" . $form->get('startDateTime')->getData()->format('Y-m-d H:m') . ").");
             }
 
-            if($flashCount==0) {
-                $eventRepository= $em->getRepository(Event::class);
+            if ($flashCount == 0) {
+                $eventRepository = $em->getRepository(Event::class);
                 $eventRepository->save($event, true);
                 return $this->redirectToRoute("app_event_show", ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
             } else {
@@ -76,8 +76,6 @@ class EventController extends AbstractController
         ]);
 
 
-
-
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
@@ -91,8 +89,8 @@ class EventController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Event $event,
-                        EntityManagerInterface $em): Response
+    public function edit(Request                $request, Event $event,
+                         EntityManagerInterface $em): Response
     {
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
@@ -102,27 +100,28 @@ class EventController extends AbstractController
             // règle gestion maxInscrits => modif state si besoin
             $participants = $form->get('participants')->getData();
             $flashCount = 0;
+
             if ($participants->count() > $event->getMaxParticipants()) {
 //                dump("too many participants");
                 $flashCount++;
                 $this->addFlash('danger', "The maximum number of participants ("
                     . $event->getMaxParticipants() . ") has been exceeded"
-                    ." (".$participants->count().").");
+                    . " (" . $participants->count() . ").");
 
             } elseif ($participants->count() == $event->getMaxParticipants()) {
-                $event->setState($em->getRepository(State::class)->findOneBy(['name'=>'CLOSED']));
+                $event->setState($em->getRepository(State::class)->findOneBy(['name' => 'CLOSED']));
             }
 
             // Registrationdeadline and starting date check
-            if ($form->get('registrationDeadline')->getData()>$form->get('startDateTime')->getData()) {
+            if ($form->get('registrationDeadline')->getData() > $form->get('startDateTime')->getData()) {
                 $flashCount++;
                 $this->addFlash('danger', "Registration deadline ("
                     . $form->get('registrationDeadline')->getData()->format('Y-m-d H:m') . ") can't exceed starting date"
-                    ." (".$form->get('startDateTime')->getData()->format('Y-m-d H:m').").");
+                    . " (" . $form->get('startDateTime')->getData()->format('Y-m-d H:m') . ").");
             }
 
-            if($flashCount==0) {
-                $eventRepository= $em->getRepository(Event::class);
+            if ($flashCount == 0) {
+                $eventRepository = $em->getRepository(Event::class);
                 $eventRepository->save($event, true);
                 return $this->redirectToRoute("app_event_show", ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
             } else {
@@ -141,7 +140,7 @@ class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EventRepository $eventRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
             $eventRepository->remove($event, true);
         }
 

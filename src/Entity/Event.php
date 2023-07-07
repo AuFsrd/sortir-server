@@ -67,7 +67,7 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['event:read', 'event:write'])] // Pour la publication
-    private ?State $state = null;
+    private ?Status $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
@@ -166,14 +166,14 @@ class Event
         return $this;
     }
 
-    public function getState(): ?State
+    public function getStatus(): ?Status
     {
-        return $this->state;
+        return $this->status;
     }
 
-    public function setState(?State $state): static
+    public function setStatus(?Status $status): static
     {
-        $this->state = $state;
+        $this->status = $status;
 
         return $this;
     }
