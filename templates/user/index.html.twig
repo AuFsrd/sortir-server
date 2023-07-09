@@ -8,7 +8,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Username</th>
                 <th>Roles</th>
                 <th>FirstName</th>
@@ -23,8 +22,9 @@
         <tbody>
         {% for user in users %}
             <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
+
+                <td>{{  }}</td>
+                <td>{{ user.id ~ ' / ' ~ user.username }}</td>
 {#                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>#}
                 <td>{{ user.roles ? (user.roles|join(', ')|replace({'ROLE_':''})) : '' }}</td>
                 <td>{{ user.firstName }}</td>
