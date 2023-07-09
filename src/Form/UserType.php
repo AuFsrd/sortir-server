@@ -61,11 +61,17 @@ class UserType extends AbstractType
             ->add('administrator', CheckboxType::class, [
                 'label' => 'Is admin',
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'checkbox-switch',
+                ],
 
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'Is active',
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'checkbox-switch',
+                ],
             ])
             ->add('site', EntityType::class, [
                 'label' => 'Site',

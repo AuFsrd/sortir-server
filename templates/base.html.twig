@@ -36,7 +36,7 @@
             {% include '_navbar.html.twig' %}
         </header>
 
-        <main>
+        <main class="main">
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{ label }}">
@@ -49,8 +49,8 @@
             {% endblock %}
         </main>
 
-        <footer>
-            <div>{{ "now" | date("Y") }} G.O.A.T </div>
+        <footer class="bg-secondary">
+            <div class="text-info fw-semibold pt-1 pb-1">{{ "now" | date("Y") }} G.O.A.T </div>
         </footer>
     </body>
 </html>
