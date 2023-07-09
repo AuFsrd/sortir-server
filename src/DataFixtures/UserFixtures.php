@@ -51,16 +51,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         for($i=1;$i<=20;$i++){
             $user = new User();
-            $tempName=$faker->userName . $i;
+            $user->setFirstName($faker->firstName);
+            $user->setLastName($faker->lastName);
+            $tempName=$user->getFirstName() . substr($user->getLastName(),0,1) . $i;
             $user->setUsername($tempName);
             $user->setEmail("$tempName@eni-ecole.fr");
             $pwd=$this->userPasswordHasher->hashPassword($user,'123456');
             $user->setPassword($pwd);
-
-            $user->setFirstName($faker->firstName);
-            $user->setLastName($faker->lastName);
             $user->setPhone(str_replace(' ','',$faker->phoneNumber()));
-
             $user->setSite($faker->randomElement($sites));
             $manager->persist($user);
         }

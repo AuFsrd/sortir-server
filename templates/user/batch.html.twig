@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Users{% endblock %}
+
+{% block body %}
+    <h1>Import a .csv file</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary">
+        <span class="{{ form.loading==false ? 'spinner-border spinner-border-sm'  }}" role="status" aria-hidden="true"></span>
+        {{ form.loading==false ? 'Loading...':'Upload' }}
+    </button>
+    {{ form_end(form) }}
+
+    <a class="btn btn-secondary mt-1" href="{{ path('app_user_index') }}">User list</a>
+{% endblock %}
