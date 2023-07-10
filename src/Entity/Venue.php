@@ -35,6 +35,7 @@ class Venue
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:255, minMessage: 'Too short')]
+    #[Groups(['event:read', 'event:write'])]
     private ?string $street = null;
 
     #[ORM\Column(nullable: true)]
@@ -45,6 +46,7 @@ class Venue
 
     #[ORM\ManyToOne(inversedBy: 'venues')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
     private ?City $city = null;
 
     #[ORM\OneToMany(mappedBy: 'venue', targetEntity: Event::class)]

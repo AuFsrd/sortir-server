@@ -2,16 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\EventRepository;
+use App\Services\CustomFilterLogic;
+use App\Services\EventFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Metaclass\FilterBundle\Filter\FilterLogic;
+use Metaclass\FilterBundle\Filter\RemoveFakeLeftJoin;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,7 +29,20 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(normalizationContext: ['groups' => 'event:write']),
         new Patch(normalizationContext: ['groups' => 'event:write'])
     ],
+    paginationEnabled: false
 )]
+#[ApiFilter(SearchFilter::class, properties: [
+    'name' => 'iword_start',
+    'organiser.site' => 'exact',
+    'organiser' => 'exact',
+    'participants' => 'exact',
+])]
+#[ApiFilter(DateFilter::class, properties: [
+    'startDateTime',
+    'registrationDeadline'
+])]
+#[ApiFilter(FilterLogic::class)]
+#[ApiFilter(EventFilter::class)]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {

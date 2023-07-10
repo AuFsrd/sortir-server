@@ -8,6 +8,7 @@ use App\Repository\CityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -22,16 +23,19 @@ class City
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:read', 'event:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:100, minMessage: 'Too short')]
+    #[Groups(['event:read', 'event:write'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 5)]
     #[Assert\NotBlank()]
     #[Assert\Length(5)]
+    #[Groups(['event:read'])]
     private ?string $postcode = null;
 
     #[ORM\OneToMany(mappedBy: 'city', targetEntity: Venue::class)]
