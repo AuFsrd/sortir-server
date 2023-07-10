@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\EventRepository;
 use App\Services\CustomFilterLogic;
+use App\Services\EventFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -41,6 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     'registrationDeadline'
 ])]
 #[ApiFilter(FilterLogic::class)]
+#[ApiFilter(EventFilter::class)]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
