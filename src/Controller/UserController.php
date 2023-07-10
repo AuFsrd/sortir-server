@@ -3,15 +3,27 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\csvImportType;
 use App\Form\UserType;
 use App\Repository\EventRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
+use App\Service\CsvImport;
+use Doctrine\DBAL\Types\BooleanType;
+use League\Csv\Exception;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+/*use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;*/
+
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\File;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -42,7 +54,7 @@ class UserController extends AbstractController
             );
             $imageFile = $form->get('image')->getData();
             if($imageFile){
-                $user->setFilename($fileUploader->upload($imageFile));
+                $user->setFilename($fileUploader->upload($imageFile, 'img'));
             }
             $userRepository->save($user, true);
 
@@ -52,6 +64,58 @@ class UserController extends AbstractController
         return $this->renderForm('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/csv', name: 'app_user_csv', methods: ['GET', 'POST'])]
+    public function csv(Request $request, FileUploader $fileUploader, CsvImport $csv, UserPasswordHasherInterface $userPasswordHasher,): Response
+    {
+        $dataSet[]=[];
+/*        $form = $this->createForm(csvImportType::class, $dataSet);
+        $form->handleRequest($request);*/
+
+        $csvForm=$this->createFormBuilder()
+            ->add('file', FileType::class, [
+                'required'=>false,
+                'mapped'=>false,
+                'constraints'=> [
+                    new File([
+                        'mimeTypes' => [
+                            'text/csv',
+                            'text/x-csv',
+                            'text/plain',
+                        ],
+                        'mimeTypesMessage'=>'Please upload a valid csv file'
+                    ])
+                ]
+            ])
+            ->add('loading', HiddenType::class, [
+                'data'=>false,
+            ])
+            ->getForm();
+        $csvForm->handleRequest($request);
+        if ($csvForm->isSubmitted()) {
+            $file = $csvForm->get('file')->getData();
+            if($file){
+                $fileUploader->upload($file,'csv');
+                //execute csv import script
+                $nbUserUploaded = $csv->importCsv($userPasswordHasher, $file);
+                /*$user->setFilename($fileUploader->upload($imageFile));*/
+/*                $csvForm->setData(['loading'=>true]);*/
+                $this->addFlash('success', "$nbUserUploaded new user(s) added");
+            } else {
+                $this->addFlash('danger', "Somehow I can't manage to upload this file :/");
+            }
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/batch.html.twig', [
+            'dataSet' => $dataSet,
+            'form' => $csvForm,
         ]);
     }
 
@@ -83,7 +147,7 @@ class UserController extends AbstractController
             || $imageFile) {
                 $fileUploader->delete($user->getFilename(), $this->getParameter('app.images_user_directory'));
                 if($imageFile){
-                    $user->setFilename($fileUploader->upload($imageFile));
+                    $user->setFilename($fileUploader->upload($imageFile, 'img'));
                 } else {
                     $user->setFilename(null);
                 }

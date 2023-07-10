@@ -8,25 +8,32 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 final class FileUploader
 {
 
-    public function __construct(private readonly string $targetDirectory)
+    public function __construct(private readonly string $targetDirectory,
+                                private readonly string $csvTargetDirectory)
     {
 
     }
 
-    public function upload(UploadedFile $file): string
+    public function upload(UploadedFile $file, string $type): string
     {
-        $fileName = uniqid() . 'Services' .$file->guessExtension();
+        $fileName = ($type==='img'?uniqid().'-':'') . $file->getClientOriginalName();
         try {
-            $file->move($this->getTargetDirectory(),$fileName);
+            $file->move($this->getTargetDirectory($type),$fileName);
         } catch (FileException $e) {
             die($e->getCode().'-'.$e->getMessage());
         }
         return  $fileName;
     }
 
-    public function getTargetDirectory():string {
+
+    public function getTargetDirectory(string $type):string {
 //        return '/public/uploads/images/wish';
-        return $this->targetDirectory;
+        if($type==='img') {
+            return $this->targetDirectory;
+        } else {
+            return $this->csvTargetDirectory;
+        }
+
     }
 
     public function delete (?string $fileName, string $rep):void {

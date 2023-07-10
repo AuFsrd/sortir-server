@@ -1,48 +1,103 @@
 {{ form_start(form) }}
-    <div>
-    {{ form_label(form.username) }}
-    {{ form_widget(form.username)}}
-</div>
-<div>
-    {{ form_label(form.password) }}
-    {{ form_widget(form.password)}}
-</div>
-<div>
-    {{ form_label(form.firstName) }}
-    {{ form_widget(form.firstName)}}
-</div>
-<div>
-    {{ form_label(form.lastName) }}
-    {{ form_widget(form.lastName)}}
-</div>
-<div>
-    {{ form_label(form.phone) }}
-    {{ form_widget(form.phone)}}
-</div>
-<div>
-    {{ form_label(form.email) }}
-    {{ form_widget(form.email)}}
-</div>
-<div>
-    {{ form_label(form.administrator) }}
-    {{ form_widget(form.administrator)}}
-</div>
-<div>
-    {{ form_label(form.active) }}
-    {{ form_widget(form.active)}}
-</div>
-<div>
-    {{ form_label(form.site) }}
-    {{ form_widget(form.site)}}
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                    {{ form_label(form.username) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.username)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                {{ form_label(form.password) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.password)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                {{ form_label(form.firstName) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.firstName)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                {{ form_label(form.lastName) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.lastName)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                {{ form_label(form.phone) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.phone)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                {{ form_label(form.email) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.email)}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="">
+                <div class="">
+                    {{ form_label(form.administrator) }}
+                </div>
+                <div class="">
+                    {{ form_widget(form.administrator)}}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="">
+                {{ form_label(form.active) }}
+                </div>
+                <div class="">
+                    {{ form_widget(form.active)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-sm-3">
+                {{ form_label(form.site) }}
+                </div>
+                <div class="col-sm-9">
+                    {{ form_widget(form.site)}}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="">
+                {{ form_row(form.image)}}
+                </div>
+
+                {% if form.vars.value.filename!=null %}
+
+                    <div class="">
+                            <img src="{{ asset(app_images_user_directory ~'/' ~form.vars.value.filename) }}"class="img-fluid" alt="image"/>
+                    </div>
+                    <div class="">
+                        {{ form_row(form.deleteImage) }}
+
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+        <button class="btn btn-primary mt-1">{{ button_label|default('Save') }}</button>
+    </div>
+
 </div>
 
-<div>
-    {{ form_row(form.image)}}
-    {% if form.vars.value.filename!=null %}
-        <img src="{{ asset(app_images_user_directory ~'/' ~form.vars.value.filename) }}"
-             class="" alt="image"/>
-        {{ form_row(form.deleteImage) }}
-    {% endif %}
-</div>
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
 {{ form_end(form) }}
