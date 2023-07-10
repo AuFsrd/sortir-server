@@ -6,6 +6,8 @@ use App\Entity\Event;
 use App\Entity\Status;
 use App\Form\EventType;
 use App\Repository\EventRepository;
+use App\Repository\StatusRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,7 +91,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
-    public function edit(Request                $request, Event $event,
+    public function edit(Request $request, Event $event,
                          EntityManagerInterface $em): Response
     {
         $form = $this->createForm(EventType::class, $event);
@@ -136,12 +138,46 @@ class EventController extends AbstractController
             'form' => $form,
         ]);
     }
+//app_event_cancel
+    #[Route('/{id}', name: 'app_event_cancel', methods: ['POST'])]
+    public function cancel(Request $request, Event $event, EventRepository $eventRepository,
+        StatusRepository $statusRepository,
+        UserRepository $userRepository): Response
+    {
+        if ($this->isCsrfTokenValid('cancel' . $event->getId(), $request->request->get('_token'))) {
+            try {
+                $event->setStatus($statusRepository->findOneBy(['name'=>'CANCELLED']));
+                //Participants list retrieval
+                $usersAsParticipants = $event->getParticipants();
+                $event->removeParticipants($usersAsParticipants);
+                $userRepository->saveList($usersAsParticipants, true);
+                $eventRepository->save($event, true);
 
-    #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
+                $this->addFlash('success', 'Event successfully cencelled');
+            } catch(\Exception $e) {
+                $this->addFlash('alert', 'Event impossible to cancel.');
+            }
+
+        } else {
+            $this->addFlash('alert', 'Event impossible to cancel.');
+        }
+
+        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+    #[Route('/{id}/delete', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EventRepository $eventRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token')))
+        {
+
             $eventRepository->remove($event, true);
+            $this->addFlash('success', 'Event successfully deleted.');
+        } else {
+
+            $this->addFlash('alert', 'Deletion failed.');
         }
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);

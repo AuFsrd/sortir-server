@@ -43,6 +43,7 @@ class EventType extends AbstractType
             ])
             ->add('participants', EntityType::class, [
                 'label' => 'Participants',
+                'required' => false,
                 'class' => User::class,
                 'choice_label' => 'fullname',
                 'placeholder' => '--Choose one or more participant(s)--',

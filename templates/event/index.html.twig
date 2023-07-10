@@ -3,7 +3,10 @@
 {% block title %}Event index{% endblock %}
 
 {% block body %}
-    <h1>Event index</h1>
+    <div class="row align-items-center mb-3">
+        <h1 class="col-3">Event index</h1>
+        <a class="btn btn-secondary col-sm-1" href="{{ path('app_user_new') }}">Create</a>
+    </div>
 
     <table class="table">
         <thead>
@@ -33,6 +36,8 @@
                 <td>
                     <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
                     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+{#                    <a href="#">cancel</a>#}
+                    {% include'event/_cancel_form.html.twig' with {'button': 'false'} %}
                 </td>
             </tr>
         {% else %}
@@ -43,5 +48,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_event_new') }}">Create new</a>
+    <a class="btn btn-secondary" href="{{ path('app_event_new') }}">Create new</a>
 {% endblock %}

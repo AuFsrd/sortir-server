@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\BooleanType;
 use League\Csv\Exception;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -95,6 +96,15 @@ class UserController extends AbstractController
             ->add('loading', HiddenType::class, [
                 'data'=>false,
             ])
+            ->add('delimiter', ChoiceType::class, [
+                'label' => 'Delimiter',
+                'choices' => [
+                    'semicolon (;)'=> ';',
+                    'comma (,)' => ',',
+                    'tab (\t)' => '\t'
+                ]
+
+            ])
             ->getForm();
         $csvForm->handleRequest($request);
         if ($csvForm->isSubmitted()) {
@@ -102,10 +112,19 @@ class UserController extends AbstractController
             if($file){
                 $fileUploader->upload($file,'csv');
                 //execute csv import script
-                $nbUserUploaded = $csv->importCsv($userPasswordHasher, $file);
-                /*$user->setFilename($fileUploader->upload($imageFile));*/
-/*                $csvForm->setData(['loading'=>true]);*/
-                $this->addFlash('success', "$nbUserUploaded new user(s) added");
+                try {
+                    $nbUserUploaded = $csv->importCsv($userPasswordHasher, $file, $csvForm->get('delimiter')->getData());
+                    $this->addFlash('success', "$nbUserUploaded new user(s) added");
+                } catch (\Exception $e) {
+
+                    if ($e->getCode()=== 0) {
+                        $this->addFlash('danger', "Undefined array key or bad delimiter.");
+                    } elseif ($e->getCode()=== 1048) {
+                        $this->addFlash('danger', stristr($e->getMessage(),'1048 '));
+                    }
+                }
+
+
             } else {
                 $this->addFlash('danger', "Somehow I can't manage to upload this file :/");
             }

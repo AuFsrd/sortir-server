@@ -42,12 +42,12 @@ final class CsvImport
      * @return void
      * @throws Exception
      */
-    public function importCsv(UserPasswordHasher $userPasswordHasher, UploadedFile $file
-    ): int
+    public function importCsv(UserPasswordHasher $userPasswordHasher, UploadedFile $file,
+    string $delimiter): int
     {
 
         $csv = Reader::createFromPath($this->csvTargetDirectory.'/'.$file->getClientOriginalName(),'r');
-        $csv->setDelimiter(';');
+        $csv->setDelimiter($delimiter);
         $csv->setHeaderOffset(0);
         $results = $csv->getRecords();
         $nb= iterator_count($results);
