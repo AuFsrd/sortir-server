@@ -36,6 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     'organiser.site' => 'exact',
     'organiser' => 'exact',
     'participants' => 'exact',
+    'status.name' => 'exact',
 ])]
 #[ApiFilter(DateFilter::class, properties: [
     'startDateTime',
