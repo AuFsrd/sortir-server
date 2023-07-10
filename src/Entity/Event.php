@@ -219,9 +219,9 @@ class Event
         return $this;
     }
 
-    public function addParticipants(array $participants): static
+    public function addParticipants(array $listParticipants): static
     {
-        foreach ($participants as $p) {
+        foreach ($listParticipants as $p) {
             $this->participants[]=$p;
         }
         return $this;
@@ -230,13 +230,17 @@ class Event
     public function removeParticipant(User $participant): static
     {
         $this->participants->removeElement($participant);
+        $participant->removeEventAsParticipant($this);
 
         return $this;
     }
 
-    public function removeParticipants(): static
+    public function removeParticipants(Collection $listParticipants): static
     {
-
+        foreach ($listParticipants as $p) {
+            $this->removeParticipant($p);
+//            $p->removeEventAsParticipant($this);
+        }
 
         return $this;
     }
