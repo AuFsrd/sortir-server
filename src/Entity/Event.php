@@ -60,6 +60,7 @@ class Event
 
     #[ORM\Column]
     #[Groups(['event:read', 'event:write'])]
+    #[Assert\GreaterThan('today UTC')]
     private ?\DateTimeImmutable $startDateTime = null;
 
     #[ORM\Column]
@@ -70,10 +71,11 @@ class Event
 
     #[ORM\Column]
     #[Groups(['event:read', 'event:write'])]
+    #[Assert\GreaterThan('today UTC')]
     private ?\DateTimeImmutable $registrationDeadline = null;
 
     #[Assert\NotBlank()]
-    #[Assert\GreaterThan(0)]
+    #[Assert\GreaterThan(1)]
     #[ORM\Column(type: Types::SMALLINT)]
     #[Groups(['event:read', 'event:write'])]
     private ?int $maxParticipants = null;
@@ -85,7 +87,7 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['event:read', 'event:write'])] // Pour la publication
-    private ?State $state = null;
+    private ?Status $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
@@ -93,6 +95,7 @@ class Event
     private ?Venue $venue = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventsAsOrganiser')]
+
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['event:read', 'event:write'])]
     private ?User $organiser = null;
@@ -183,14 +186,14 @@ class Event
         return $this;
     }
 
-    public function getState(): ?State
+    public function getStatus(): ?Status
     {
-        return $this->state;
+        return $this->status;
     }
 
-    public function setState(?State $state): static
+    public function setStatus(?Status $status): static
     {
-        $this->state = $state;
+        $this->status = $status;
 
         return $this;
     }
@@ -250,4 +253,12 @@ class Event
 
         return $this;
     }
+
+    public function removeParticipants(): static
+    {
+
+
+        return $this;
+    }
+
 }

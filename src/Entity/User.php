@@ -76,7 +76,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $administrator = null;
 
     #[ORM\Column(options:['default'=>true])]
-    #[Assert\NotBlank()]
     #[Groups(['user:read'])]
     private ?bool $active = null;
 
@@ -93,6 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private Collection $eventsAsParticipant;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $filename = null;
+
     /**
      * @param int|null $id
      */
@@ -100,6 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->administrator = false;
         $this->active = true;
+        $this->roles[] = 'ROLE_USER';
         $this->eventsAsOrganiser = new ArrayCollection();
         $this->eventsAsParticipant = new ArrayCollection();
     }
@@ -137,17 +140,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+//        $roles = $this->roles;
+//        // guarantee every user at least has ROLE_USER
+//        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+//        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
+        return $this;
+    }
+
+    public function addRole(string $role): static {
+        $this->roles[]=$role;
+        $this->roles = array_unique($this->roles);
         return $this;
     }
 
@@ -264,9 +274,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getEventsAsOrganiser(): Collection
     {
+
+        //todo fix sort events list by date
+//        usort($this->eventsAsOrganiser, function($e1,$e2){
+//            return $this->cmpDate($e1->getStartDateTime(), $e2->getStartDateTime());
+//        });
+
         return $this->eventsAsOrganiser;
     }
-
+    private function cmpDate($d1, $d2) {
+        if ($d1===$d2) {
+            return 0;
+        } elseif($d1<$d2) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
     public function addEventAsOrganiser(Event $event): static
     {
         if (!$this->eventsAsOrganiser->contains($event)) {
@@ -312,6 +336,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->eventsAsParticipant->removeElement($eventsAsParticipant)) {
             $eventsAsParticipant->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    public function fullname(): string {
+        return strtoupper($this->getLastName()) . ' '.ucfirst(strtolower($this->getFirstName()));
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(?string $filename): static
+    {
+        $this->filename = $filename;
 
         return $this;
     }

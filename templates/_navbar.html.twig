@@ -1,0 +1,63 @@
+<nav id="top" class="navbar navbar-expand-sm bg-secondary" data-bs-theme="dark">
+    <div class="container-fluid">
+{#        <a class="navbar-brand" href="{{ path('home_home') }}">#}
+{#            <img src="{{ asset('img/logo.svg') }}" width="30px" class="mr-2" alt="image"/>#}
+{#            <strong>Bucket List</strong>#}
+{#        </a>#}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {#        <div> #}
+        {#            #}{#            Logo + lien vers site Front #}
+        {#        </div> #}
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('main_home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_user_index') }}">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_event_index') }}">Events</a>
+                    </li>
+                    <li class="nav-item-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Locations
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_venue_index') }}">Venues</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_city_index') }}">Cities</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_site_index') }}">Sites</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_status_index') }}">Status</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

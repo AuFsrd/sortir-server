@@ -23,6 +23,19 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $sites = $manager->getRepository(Site::class)->findAll();
 
+        $nullUser = new User();
+        $nullUser->setUsername('Archived user');
+        $nullUser->setEmail('null@sortir-eni.fr');
+        $nullUser->setFirstName('NA');
+        $nullUser->setLastName('NA');
+        gc_collect_cycles();
+        $nullUser->setPhone(str_replace(' ','',$faker->phoneNumber()));
+        $pwd=$this->userPasswordHasher->hashPassword($nullUser,'123456');
+        $nullUser->setPassword($pwd);
+        $nullUser->setSite($faker->randomElement($sites));
+        $nullUser->setAdministrator(false);
+        $manager->persist($nullUser);
+
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setEmail('admin@sortir-eni.fr');
@@ -31,24 +44,21 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $admin->setPhone(str_replace(' ','',$faker->phoneNumber()));
         $pwd=$this->userPasswordHasher->hashPassword($admin,'123456');
         $admin->setPassword($pwd);
-        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->addRole('ROLE_ADMIN');
         $admin->setSite($faker->randomElement($sites));
         $admin->setAdministrator(true);
         $manager->persist($admin);
 
         for($i=1;$i<=20;$i++){
             $user = new User();
-            $tempName=$faker->userName . $i;
+            $user->setFirstName($faker->firstName);
+            $user->setLastName($faker->lastName);
+            $tempName=$user->getFirstName() . substr($user->getLastName(),0,1) . $i;
             $user->setUsername($tempName);
             $user->setEmail("$tempName@eni-ecole.fr");
             $pwd=$this->userPasswordHasher->hashPassword($user,'123456');
             $user->setPassword($pwd);
-
-            $user->setFirstName($faker->firstName);
-            $user->setLastName($faker->lastName);
             $user->setPhone(str_replace(' ','',$faker->phoneNumber()));
-            $user->setRoles(['ROLE_USER']);
-
             $user->setSite($faker->randomElement($sites));
             $manager->persist($user);
         }

@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    <div class="row align-items-center mb-3">
+        <h1 class="col-3">User index</h1>
+        <div class="dropdown col-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Create
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ path('app_user_new') }}">Single user</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_user_csv') }}">Multiple</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="">
+        <div class="container-flex ">
+            <div class="row">
+                <div class="col-3 me-1">Username</div>
+                <div class="col-5 me-1">Email</div>
+                <div class="col-1 me-1">Admin</div>
+                <div class="col-1 me-1">Active</div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="accordion" id="accordionUser">
+        {% for user in users %}
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="row p-1">
+                        <div class="col-11" type="button" data-bs-toggle="collapse" data-bs-target="#{{ user.id }}" aria-expanded="true" aria-controls="{{ user.id }}">
+                            <div class="row">
+                                <div class="col-3 me-1">{{ user.id ~ ' / ' ~ user.username }}</div>
+                                <div class="col-6 me-1">{{ user.email }}</div>
+                                <div class="col-1">{{ user.administrator ? 'Yes' : 'No' }}</div>
+                                <div class="col-1">{{ user.active ? 'Yes' : 'No' }}</div>
+
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+                            <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="{{ user.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionUser">
+                    <div class="accordion-body">
+                        <div>{{ user.roles ? (user.roles|join(', ')|replace({'ROLE_':''})) : '' }}</div>
+                        <div>{{ user.firstName }}</div>
+                        <div>{{ user.lastName }}</div>
+                        <div>{{ user.phone }}</div>
+                    </div>
+                </div>
+
+{#                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>#}
+
+            </div>
+
+        {% else %}
+            <div>
+                <div class="">no records found</div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="row align-items-center mt-3">
+        <a class="btn btn-secondary col-3" href="#top">Back to TOP</a>
+        <div class="dropdown col-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Create
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ path('app_user_new') }}">Single user</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_user_csv') }}">Multiple</a></li>
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
