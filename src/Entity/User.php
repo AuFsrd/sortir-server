@@ -81,7 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read'])]
     private ?Site $site = null;
 
     #[ORM\OneToMany(mappedBy: 'organiser', targetEntity: Event::class)]

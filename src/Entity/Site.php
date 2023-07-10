@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,7 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new Get()
+        new Get(),
+        new GetCollection()
     ],
     security: "is_granted('ROLE_ADMIN')"
 )]
@@ -23,13 +25,13 @@ class Site
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:100, minMessage: 'Too short')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read','event:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: User::class)]
