@@ -12,10 +12,7 @@ class MainController extends AbstractController
     #[Route('', name: 'home')]
     public function home(): Response
     {
-//        return $this->render('main/home.html.twig', [
-//            'controller_name' => 'MainController',
-//        ]);
-        return $this->render('main/map.html.twig', [
+        return $this->render('main/home.html.twig', [
             'controller_name' => 'MainController',
         ]);
     }
