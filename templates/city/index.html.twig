@@ -3,8 +3,10 @@
 {% block title %}City index{% endblock %}
 
 {% block body %}
-    <h1>City index</h1>
-
+    <div class="row align-items-center mb-3">
+        <h1 class="col-3">City index</h1>
+        <a class="btn btn-secondary col-sm-2" href="{{ path('app_city_new') }}">Create</a>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -33,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_city_new') }}">Create new</a>
+    <a class="btn btn-secondary col-sm-2" href="{{ path('app_city_new') }}">Create</a>
 {% endblock %}
