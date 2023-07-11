@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\csvImportType;
 use App\Form\UserType;
 use App\Repository\EventRepository;
 use App\Repository\UserRepository;
