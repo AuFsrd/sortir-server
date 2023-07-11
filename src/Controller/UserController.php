@@ -161,6 +161,7 @@ class UserController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
+
             $imageFile = $form->get('image')->getData();
             if(($form->has('deleteImage') && $form['deleteImage']->getData())
             || $imageFile) {
@@ -171,6 +172,13 @@ class UserController extends AbstractController
                     $user->setFilename(null);
                 }
             }
+            if(!$form->get('active')->getData()) {
+                $eventsAsParticipant = $user->getEventsAsParticipant();
+                foreach ($eventsAsParticipant as $e) {
+                    $e->removeParticipant($user);
+                }
+            }
+
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -189,14 +197,17 @@ class UserController extends AbstractController
     {
 
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $nullUser = $userRepository->findOneBy(['username'=>'Archived user']);
-            foreach ($user->getEventsAsOrganiser() as $e) {
-                $e->setOrganiser($nullUser);
-            }
-
+            $this->setNullUser($user, $userRepository);
             $userRepository->remove($user, true);
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    public function setNullUser(User $user, UserRepository $userRepository):void {
+        $nullUser = $userRepository->findOneBy(['username'=>'Archived user']);
+        foreach ($user->getEventsAsOrganiser() as $e) {
+            $e->setOrganiser($nullUser);
+        }
+}
 }
