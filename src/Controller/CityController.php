@@ -28,16 +28,18 @@ class CityController extends AbstractController
         $city = new City();
         $form = $this->createForm(CityType::class, $city);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && isset($_POST['check_button'])) {
-            $data=$form->getData();
-            $name = $data->getName()?$data->getName().'&type=municipality':'';
-            $postcode = $data->getPostcode()??'';
-            $param = ($name && $postcode)? $name.'+'.$postcode:$name.$postcode;
-            $cities = file_get_contents('https://api-adresse.data.gouv.fr/search/?q='.$param.'&autocomplete=1');
-            $citiesTab = $serializer->decode($cities,'json');
-            dd($citiesTab['features']);
+//        if ($form->isSubmitted() && isset($_POST['check_button'])) {
+//            $data=$form->getData();
+//            $name = $data->getName()?$data->getName().'&type=municipality':'';
+//            $postcode = $data->getPostcode()??'';
+//            $param = ($name && $postcode)? $name.'+'.$postcode:$name.$postcode;
+//            $cities = file_get_contents('https://api-adresse.data.gouv.fr/search/?q='.$param.'&autocomplete=1');
+//            $citiesTab = $serializer->decode($cities,'json');
+//            dd($citiesTab['features']);
+//
+//        } elseif ($form->isSubmitted() && $form->isValid() && isset($_POST['save_button'])) {
+        if  ($form->isSubmitted() && $form->isValid()) {
 
-        } elseif ($form->isSubmitted() && $form->isValid() && isset($_POST['save_button'])) {
             $cityRepository->save($city, true);
 
             return $this->redirectToRoute('app_city_index', [], Response::HTTP_SEE_OTHER);

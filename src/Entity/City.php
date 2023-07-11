@@ -27,13 +27,13 @@ class City
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    //#[Assert\NotBlank()]
+    #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:100, minMessage: 'Too short')]
     #[Groups(['event:read', 'event:write'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 5)]
-    //#[Assert\NotBlank()]
+    #[Assert\NotBlank()]
     #[Assert\Length(5)]
     #[Groups(['event:read'])]
     private ?string $postcode = null;

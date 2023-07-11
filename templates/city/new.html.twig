@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+
+
+
 {% block title %}New City{% endblock %}
 
 {% block body %}
@@ -8,4 +15,50 @@
     {{ include('city/_form.html.twig') }}
 
     <a class="btn btn-secondary" href="{{ path('app_city_index') }}">City list</a>
+
+    <div><br></div>
+    <script>
+        const cityNameNode = document.getElementById("city_name");
+        const postcodeNode = document.getElementById("city_postcode");
+        let data;
+        let lon;
+        let lat;
+
+        const datalist = createDataList();
+
+        const getData = async ()=> {
+            const response = await fetch('https://api-adresse.data.gouv.fr/search/?q='+cityNameNode.value+'&type=municipality&autocomplete=1');
+            data = await response.json();
+            console.log(data.features);
+            cityName= data.features.map(result=>`<option id=${result.properties.city} postcode=${result.properties.postcode} lat=${result.geometry.coordinates[0]} lon=${result.geometry.coordinates[1]} >${result.properties.city}</option>`);
+            datalist.innerHTML=cityName.join();
+        }
+
+        cityNameNode.oninput = getData;
+        cityNameNode.onchange = refreshPostcode;
+        cityNameNode.setAttribute('list','city_list');
+        cityNameNode.appendChild(datalist);
+
+        function refreshPostcode() {
+            postcodeNode.value = document.getElementById(cityNameNode.value).getAttribute('postcode');
+            lat = document.getElementById(cityNameNode.value).getAttribute('lat');
+            lon = document.getElementById(cityNameNode.value).getAttribute('lon');
+            console.log(postcodeNode.value)
+            console.log(lat)
+            console.log(lon)
+        }
+
+        function createDataList(){
+            let values = [];
+            let dataList = document.createElement('datalist');
+            dataList.id = "city_list";
+            return dataList;
+        }
+    </script>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
 {% endblock %}
