@@ -12,6 +12,8 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20230707123738 extends AbstractMigration
 {
+    private array $eventNames = [];
+
     public function getDescription(): string
     {
         return '';
@@ -35,6 +37,35 @@ final class Version20230707123738 extends AbstractMigration
         $this->addSql('ALTER TABLE event_user ADD CONSTRAINT FK_92589AE2A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D649F6BD1646 FOREIGN KEY (site_id) REFERENCES site (id)');
         $this->addSql('ALTER TABLE venue ADD CONSTRAINT FK_91911B0D8BAC62AF FOREIGN KEY (city_id) REFERENCES city (id)');
+
+        // set up MySQL events for cron tasks
+        $this->addSql('SET GLOBAL event_scheduler = ON');
+
+        /*
+        Le cron démarre à l'heure suivante H:00:00 (e.g. il est 10h26 -> démarre à 11h00),
+        pour passer uniquement à des heures exactes (contrainte à la création de l'évènement : heure exacte).
+        On évite ainsi d'avoir des fenêtres de temps durant lesquelles l'état de l'évènement n'est pas en concordance
+        avec ses dates et heures. Notamment, on évite de laisser ouvert un évènement dont la date limite d'inscription
+        est dépassée, ce qui pourrait être le cas pendant une fenêtre pouvant aller jusqu'à une heure si le cron
+        se déclenchait à des heures arbitraires.
+        */
+        $priority = 0;
+        $this->addSql($this->makeStatusUpdateMySQLEvent(++$priority,
+            'closed',
+            'NOW() >= registration_deadline',
+            'open'));
+        $this->addSql($this->makeStatusUpdateMySQLEvent(++$priority,
+            'in progress',
+            'NOW() BETWEEN start_date_time AND DATE_ADD(start_date_time, INTERVAL duration MINUTE)',
+            'closed'));
+        $this->addSql($this->makeStatusUpdateMySQLEvent(++$priority,
+            'past',
+            'NOW() > DATE_ADD(start_date_time, INTERVAL duration MINUTE)',
+            'in progress'));
+        $this->addSql($this->makeStatusUpdateMySQLEvent(++$priority,
+            'archived',
+            'NOW() > DATE_ADD(start_date_time, INTERVAL duration / (60 * 24) + 30 DAY)',
+            'created', 'cancelled', 'past'));
     }
 
     public function down(Schema $schema): void
@@ -55,5 +86,41 @@ final class Version20230707123738 extends AbstractMigration
         $this->addSql('DROP TABLE user');
         $this->addSql('DROP TABLE venue');
         $this->addSql('DROP TABLE messenger_messages');
+        foreach ($this->eventNames as $eventName) {
+            $this->addSql("DROP EVENT $eventName");
+        }
+    }
+
+    private function makeStatusUpdateMySQLEvent(int $executionPriority, string $targetState, string $condition, string ...$sourceStates): string
+    {
+        $targetState = strtolower($targetState);
+        $eventName = str_pad($executionPriority . '', 2, '0', STR_PAD_LEFT) . "_set_status_" . str_replace(" ", "", $targetState);
+        $this->eventNames[] = $eventName;
+        $targetState = strtoupper($targetState); // superfluous
+
+        $sql = "CREATE EVENT $eventName";
+        $sql = $this->addNewline($sql);
+        $sql .= 'ON SCHEDULE EVERY 1 HOUR';
+        $sql = $this->addNewline($sql);
+        $sql .= "STARTS STR_TO_DATE(CONCAT(CURRENT_DATE, ' ', CONCAT(HOUR(CURRENT_TIME) + 1, ':00:00')), '%Y-%m-%d %H:%i:%s')";
+        $sql = $this->addNewline($sql);
+        $sql .= 'DO';
+        $sql = $this->addNewline($sql);
+        $sql .= "UPDATE event";
+        $sql = $this->addNewline($sql);
+        $sql .= "SET status_id = (SELECT id FROM status WHERE name = '$targetState')";
+        $sql = $this->addNewline($sql);
+        $sql .= "WHERE status_id IN(SELECT id FROM status WHERE name IN('";
+        $sql .= implode("', '", $sourceStates);
+        $sql .= "'))";
+        $sql = $this->addNewline($sql);
+        $sql .= "AND $condition";
+
+        return $sql;
+    }
+
+    private function addNewline(string $s)
+    {
+        return $s . "\n";
     }
 }
