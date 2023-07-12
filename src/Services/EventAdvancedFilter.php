@@ -5,12 +5,12 @@ namespace App\Services;
 use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
-use App\Entity\User;
 use App\Entity\Event;
-use Doctrine\DBAL\Types\IntegerType;
+use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\PropertyInfo\Type;
 
-class EventFilter extends AbstractFilter
+class EventAdvancedFilter extends AbstractFilter
 {
 
     protected function filterProperty(
@@ -20,35 +20,35 @@ class EventFilter extends AbstractFilter
         QueryNameGeneratorInterface $queryNameGenerator,
         string $resourceClass,
         Operation $operation = null,
-        array $context = []): void
+        array $context = []
+    ): void
     {
-        if ($property != 'notParticipant') {
+        if ($property != 'whereUser') {
             return;
         }
 
-        $user = $queryBuilder->getEntityManager()->getRepository(User::class)->find($value);
-
         $rootAlias = $queryBuilder->getRootAliases()[0];
-        $userId = $value;
+        $userId = $value[0];
 
         $subQueryBuilder = $queryBuilder->getEntityManager()->createQueryBuilder();
         $subQueryBuilder->select('event.id')
             ->from(Event::class, 'event')
-            ->leftJoin('event.participants', 'user')
-            ->where($subQueryBuilder->expr()->eq('user.id', ':userId'));
+            ->leftJoin('event.participants', 'user');
+        if (isset($value[1]))
 
         $queryBuilder->andWhere($queryBuilder->expr()->notIn("$rootAlias.id", $subQueryBuilder->getDQL()))
             ->setParameter('userId', $userId);
+
     }
 
     public function getDescription(string $resourceClass): array
     {
         return [
             'notParticipant' => [
-                'property' => 'participants',
-                'type' => 'integer',
+                'property' => 'whereUser',
+                'type' => Type::BUILTIN_TYPE_ARRAY,
                 'required' => false,
-                'description' => 'Retourne les event ou l\'utilisateur n\'est pas inscrit',
+                'description' => 'Filtre les events en fonction du user',
                 'openapi' => [
                     'allowReserved' => false,
                     'allowEmptyValue' => true,
