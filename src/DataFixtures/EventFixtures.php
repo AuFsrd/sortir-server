@@ -36,7 +36,12 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             $event->setRegistrationDeadline($tempDate->sub(new \DateInterval('P1D')));
             $event->setMaxParticipants(mt_rand(2,10));
             $event->setDescription($faker->realText(150));
-            $event->setStatus($faker->randomElement($statuses));
+            $now = new \DateTimeImmutable();
+            if ($event->getStartDateTime() < $now) {
+                $event->setStatus($statuses[4]);
+            } else {
+                $event->setStatus($faker->randomElement($statuses));
+            }
             $event->setVenue($faker->randomElement($venues));
 //            $organiser = $faker->randomElement($users);
             shuffle($users);
