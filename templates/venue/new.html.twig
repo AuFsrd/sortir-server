@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
 {% block title %}New Venue{% endblock %}
 
 {% block body %}
@@ -8,4 +12,14 @@
     {{ include('venue/_form.html.twig') }}
 
     <a href="{{ path('app_venue_index') }}">Venue list</a>
+
+    <div><br></div>
+    <script src="{{ asset('scripts/apiVenue.js') }}">
+    </script>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
 {% endblock %}
