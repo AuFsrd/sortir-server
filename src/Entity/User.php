@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(normalizationContext: ['groups' => 'user:read']),
         new GetCollection(normalizationContext: ['groups' => 'user:read']),
-        new Patch(normalizationContext: ['groups' => 'user:write'])
+        new Patch(normalizationContext: ['groups' => ['user:read', 'user:write']])
     ],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -93,6 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $eventsAsParticipant;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $filename = null;
 
     /**

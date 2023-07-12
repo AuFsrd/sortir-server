@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\EventRepository;
 use App\Services\CustomFilterLogic;
-use App\Services\EventFilter;
+use App\Services\EventAdvancedFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(normalizationContext: ['groups' => 'event:read']),
         new GetCollection(normalizationContext: ['groups' => 'event:read']),
-        new Post(normalizationContext: ['groups' => 'event:write']),
+        new Post(normalizationContext: ['groups' => ['event:write', 'event:read']]),
         new Patch(normalizationContext: ['groups' => 'event:write'])
     ],
     paginationEnabled: false
@@ -43,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     'registrationDeadline'
 ])]
 #[ApiFilter(FilterLogic::class)]
-#[ApiFilter(EventFilter::class)]
+#[ApiFilter(EventAdvancedFilter::class)]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
