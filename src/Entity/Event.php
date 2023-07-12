@@ -102,7 +102,7 @@ class Event
     private ?User $organiser = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'eventsAsParticipant')]
-    #[Groups(['event:read'])]
+    #[Groups(['event:read', 'event:write'])]
     private Collection $participants;
 
     public function __construct()
