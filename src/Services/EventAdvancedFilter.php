@@ -27,18 +27,28 @@ class EventAdvancedFilter extends AbstractFilter
             return;
         }
 
-        $rootAlias = $queryBuilder->getRootAliases()[0];
-        $userId = $value[0];
+        $arrayValue = json_decode($value);
+        $alias = $queryBuilder->getRootAliases()[0];
+        $user = $queryBuilder->getEntityManager()->getRepository(User::class)->find($arrayValue[0]);
 
-        $subQueryBuilder = $queryBuilder->getEntityManager()->createQueryBuilder();
-        $subQueryBuilder->select('event.id')
-            ->from(Event::class, 'event')
-            ->leftJoin('event.participants', 'user');
-        if (isset($value[1]))
+        $queryBuilder->leftJoin(sprintf('%s.participants', $alias), 'participant');
 
-        $queryBuilder->andWhere($queryBuilder->expr()->notIn("$rootAlias.id", $subQueryBuilder->getDQL()))
-            ->setParameter('userId', $userId);
+        if (in_array('organiser', $arrayValue, true)) {
+            $queryBuilder
+                ->orWhere(sprintf('%s.organiser = :userId', $alias));
+        }
 
+        if (in_array('isParticipant', $arrayValue, true)) {
+            $queryBuilder
+                ->orWhere(sprintf(':userId MEMBER OF %s.participants', $alias));
+        }
+
+        if (in_array('notParticipant', $arrayValue, true)) {
+            $queryBuilder
+                ->orWhere(sprintf(':userId NOT MEMBER OF %s.participants', $alias));
+        }
+
+        $queryBuilder->setParameter('userId', $user->getId());
     }
 
     public function getDescription(string $resourceClass): array

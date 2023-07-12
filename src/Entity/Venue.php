@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\VenueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,10 +17,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new Get()
+        new Get(),
+        new GetCollection(),
+        new Post()
     ],
     security: "is_granted('ROLE_ADMIN')"
 )]
+#[ApiFilter(SearchFilter::class, properties: [
+    'city' => 'exact',
+])]
 #[ORM\Entity(repositoryClass: VenueRepository::class)]
 class Venue
 {
