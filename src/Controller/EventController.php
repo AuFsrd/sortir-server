@@ -153,7 +153,7 @@ class EventController extends AbstractController
                 $userRepository->saveList($usersAsParticipants, true);
                 $eventRepository->save($event, true);
 
-                $this->addFlash('success', 'Event successfully cencelled');
+                $this->addFlash('success', 'Event successfully cancelled');
             } catch(\Exception $e) {
                 $this->addFlash('alert', 'Event impossible to cancel.');
             }

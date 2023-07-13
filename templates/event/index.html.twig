@@ -38,8 +38,9 @@
                     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
 {#                    <a href="#">cancel</a>#}
                     {% if (event.status.name == 'OPEN') or (event.status.name == 'CREATED') %}
-                        {% include'event/_cancel_form.html.twig' with {'button': 'false'} %}
-                    {% endif %}
+                        {% include'event/_cancel_form.html.twig' with {'button': 'false', 'disabled': 'false'} %}
+
+                        {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -49,6 +50,6 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a class="btn btn-secondary" href="{{ path('app_event_new') }}">Create new</a>
+    <a class="btn btn-secondary col-3" href="#top">Back to TOP</a>
+    <a class="btn btn-primary" href="{{ path('app_event_new') }}">Create new</a>
 {% endblock %}
