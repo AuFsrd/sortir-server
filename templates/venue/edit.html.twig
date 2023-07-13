@@ -8,6 +8,8 @@
     {{ include('venue/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_venue_index') }}">Venue list</a>
-
+    <div><br></div>
+    <script src="{{ asset('scripts/apiVenue.js') }}">
+    </script>
     {{ include('venue/_delete_form.html.twig') }}
 {% endblock %}
