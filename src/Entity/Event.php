@@ -194,6 +194,14 @@ class Event
 
     public function setStatus(?Status $status): static
     {
+/*        if($status == 'CANCELLED') {
+
+                foreach ($this->getParticipants() as $p) {
+                    $p->removeEventAsParticipant($this);
+                }
+                $this->participants=new ArrayCollection();
+
+        }*/
         $this->status = $status;
 
         return $this;
